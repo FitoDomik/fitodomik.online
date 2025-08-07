@@ -1,0 +1,80 @@
+RewriteEngine On
+ServerSignature Off
+Options -Indexes
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^(.*)$ https://%1%{REQUEST_URI} [L,R=301]
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    <FilesMatch "^(index\.php|/$)">
+        Header set Link "<https://fitodomik.online>; rel=\"canonical\""
+        Header set Link "<https://fitodomik.online>; rel=\"shortlink\""
+    </FilesMatch>
+    <FilesMatch "^authentication/login\.php$">
+        Header set Link "<https://fitodomik.online/authentication/login.php>; rel=\"canonical\""
+    </FilesMatch>
+    <FilesMatch "^authentication/register\.php$">
+        Header set Link "<https://fitodomik.online/authentication/register.php>; rel=\"canonical\""
+    </FilesMatch>
+    <FilesMatch "^404\.php$">
+        Header set Link "<https://fitodomik.online/404.php>; rel=\"canonical\""
+    </FilesMatch>
+</IfModule>
+RewriteRule ^css/(.*)\.css$ css.php?file=$1.css [L,QSA]
+RewriteRule ^favicon\.ico$ security/image.php?file=icon/favicon.ico [L]
+RewriteRule ^uploads/avatars/(.+)\.(jpg|jpeg|png|gif)$ image.php?file=avatars/$1.$2 [L,QSA]
+RewriteRule ^uploads/farm_photos/(.+)\.(jpg|jpeg|png|gif)$ image.php?file=farm_photos/$1.$2 [L,QSA]
+RewriteRule ^icon/(.+)\.(png|ico|svg)$ image.php?file=icon/$1.$2 [L,QSA]
+RewriteRule ^icon/(.+)\.webmanifest$ manifest.php?file=$1.webmanifest [L,QSA]
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+<FilesMatch "\.(config|ini|log|sql|json)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+<FilesMatch "site\.webmanifest$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+ErrorDocument 404 /404.php
+ErrorDocument 403 /403.php
+<IfModule mod_headers.c>
+    <FilesMatch "\.webmanifest$">
+        Header set Content-Type "application/manifest+json"
+    </FilesMatch>
+    <FilesMatch "^get-.*\.php$">
+        Header set Cache-Control "private, max-age=300"
+    </FilesMatch>
+    <FilesMatch "^(save|update|import|delete|toggle|clear|mark|upload|activate|share|check)-.*\.php$">
+        Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+</IfModule>
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/manifest+json "access plus 1 week"
+</IfModule>
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/manifest+json
+</IfModule> 
