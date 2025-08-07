@@ -1,10 +1,7 @@
 RewriteEngine On
+Options -Indexes
 ServerSignature Off
 Options -Indexes
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-RewriteRule ^(.*)$ https://%1%{REQUEST_URI} [L,R=301]
 <IfModule mod_headers.c>
     Header set X-Content-Type-Options "nosniff"
     <FilesMatch "^(index\.php|/$)">
@@ -40,7 +37,6 @@ RewriteRule ^icon/(.+)\.webmanifest$ manifest.php?file=$1.webmanifest [L,QSA]
     Allow from all
 </FilesMatch>
 ErrorDocument 404 /404.php
-ErrorDocument 403 /403.php
 <IfModule mod_headers.c>
     <FilesMatch "\.webmanifest$">
         Header set Content-Type "application/manifest+json"
