@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /authentication/
+Disallow: /api/
+Disallow: /config/
+Disallow: /uploads/
+Sitemap: https://fitodomik.online/sitemap.xml 
